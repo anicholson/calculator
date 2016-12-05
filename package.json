@@ -1,0 +1,28 @@
+{
+  "name": "elm-calculator",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "elm",
+    "calculator"
+  ],
+  "author": "Andy Nicholson <andrew@anicholson.net>",
+  "license": "ISC",
+  "private": true,
+  "devDependencies": {
+    "contextify": "0.1.15",
+    "css-loader": "^0.26.1",
+    "elm-webpack-loader": "^3.1.0",
+    "extract-text-webpack-plugin": "2.0.0-beta.4",
+    "html-loader": "latest",
+    "node-sass": "^3.13.0",
+    "sass-loader": "^4.0.2",
+    "scss-loader": "0.0.1",
+    "style-loader": "^0.13.1",
+    "webpack": "2.1.0-beta.27"
+  }
+}
