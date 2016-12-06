@@ -1,6 +1,6 @@
 module Calculator exposing (..)
 
-import Html exposing (programWithFlags, text, div)
+import Html exposing (programWithFlags, text, div, section)
 import Html.Attributes exposing (class)
 import Html.Events exposing (onClick)
 import Char exposing (isDigit)
@@ -242,7 +242,7 @@ view model =
             model.styles
     in
         div [ class s.container ]
-            [ div [ class s.display ] [ text <| String.fromList model.currentInput ]
+            [ div [ class s.display ] [ section [] [ section [] [ text <| String.fromList model.currentInput ] ] ]
             , div [ class s.buttons ]
                 [ div [ class s.numbers ]
                     [ div [ class s.numbersContainer ]
