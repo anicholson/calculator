@@ -27,6 +27,7 @@ type alias Model =
     { stack : Float
     , currentInput : List Digit
     , activeOperator : Maybe BinaryOperator
+    , clearDisplayOnNextInput : Bool
     , error : Bool
     , styles : ClassNames
     }
@@ -36,14 +37,14 @@ type Msg
     = ClearAll
     | EnteredDigit Digit
     | EnteredDecimal
-    | BinaryOperator BinaryOperator
-    | UnaryOperator UnaryOperator
+    | EnteredBinaryOperator BinaryOperator
+    | EnteredUnaryOperator UnaryOperator
     | Equals
 
 
 blankModel : ClassNames -> Model
 blankModel styles =
-    { stack = 0.0, currentInput = [], activeOperator = Nothing, error = False, styles = styles }
+    { stack = 0.0, currentInput = [], activeOperator = Nothing, error = False, styles = styles, clearDisplayOnNextInput = True }
 
 
 init : ClassNames -> ( Model, Cmd msg )
@@ -79,7 +80,18 @@ inputAsNumber digits =
 
 placeAnswerInModel : Model -> Float -> Maybe Model
 placeAnswerInModel model answer =
-    Just { model | stack = answer, currentInput = [], activeOperator = Nothing, error = False }
+    let
+        floatToChars =
+            String.toList << toString
+    in
+        Just
+            { model
+                | stack = answer
+                , currentInput = floatToChars answer
+                , activeOperator = Nothing
+                , error = False
+                , clearDisplayOnNextInput = True
+            }
 
 
 performUnaryOperation : UnaryOperator -> Model -> Result String Model
@@ -165,23 +177,38 @@ update msg model =
                 init model.styles
 
             EnteredDigit d ->
-                if isDigit d then
-                    ( { model | currentInput = List.append model.currentInput [ d ] }, Cmd.none )
-                else
-                    nothingHappens
+                -- throw away the input iff there's a value stacked exists, or no operation has been stashed
+                let
+                    newInputValue =
+                        if model.clearDisplayOnNextInput then
+                            [ d ]
+                        else
+                            List.append model.currentInput [ d ]
+                in
+                    if isDigit d then
+                        ( { model | currentInput = newInputValue, clearDisplayOnNextInput = False }, Cmd.none )
+                    else
+                        nothingHappens
 
             EnteredDecimal ->
                 if alreadyDecimal model.currentInput then
                     nothingHappens
                 else
-                    ( { model | currentInput = List.append model.currentInput [ '.' ] }, Cmd.none )
+                    let
+                        newInputValue =
+                            if model.clearDisplayOnNextInput then
+                                [ '0', '.' ]
+                            else
+                                List.append model.currentInput [ '.' ]
+                    in
+                        ( { model | currentInput = newInputValue, clearDisplayOnNextInput = False }, Cmd.none )
 
-            BinaryOperator o ->
+            EnteredBinaryOperator o ->
                 case model.activeOperator of
-                    Just _ ->
+                    Nothing ->
                         case inputAsNumber model.currentInput of
                             Just number ->
-                                ( { model | activeOperator = Just o, stack = number }, Cmd.none )
+                                ( { model | activeOperator = Just o, stack = number, clearDisplayOnNextInput = True }, Cmd.none )
 
                             Nothing ->
                                 errorOut
@@ -189,7 +216,7 @@ update msg model =
                     otherwise ->
                         errorOut
 
-            UnaryOperator o ->
+            EnteredUnaryOperator o ->
                 let
                     result =
                         seeIfRightOperandMissing model
@@ -223,7 +250,11 @@ update msg model =
                             ( finalModel, Cmd.none )
 
                         Err whyNot ->
-                            errorOut
+                            let
+                                wev =
+                                    Debug.log "error" whyNot
+                            in
+                                errorOut
 
 
 digitButton : String -> Digit -> Html.Html Msg
@@ -236,6 +267,44 @@ actionButton className caption msg =
     div [ class className, onClick msg ] [ text caption ]
 
 
+digitButtons : ClassNames -> Html.Html Msg
+digitButtons s =
+    div [ class s.numbers ]
+        [ div [ class s.numbersContainer ]
+            [ div [ class s.buttonRow ]
+                [ digitButton s.button '7'
+                , digitButton s.button '8'
+                , digitButton s.button '9'
+                ]
+            , div [ class s.buttonRow ]
+                [ digitButton s.button '4'
+                , digitButton s.button '5'
+                , digitButton s.button '6'
+                ]
+            , div [ class s.buttonRow ]
+                [ digitButton s.button '1'
+                , digitButton s.button '2'
+                , digitButton s.button '3'
+                ]
+            , div [ class s.buttonRow ]
+                [ digitButton s.bigButton '0'
+                , actionButton s.button "." EnteredDecimal
+                ]
+            ]
+        ]
+
+
+actionButtons : ClassNames -> Html.Html Msg
+actionButtons s =
+    div []
+        [ actionButton s.button "+" <| EnteredBinaryOperator Plus
+        , actionButton s.button "−" <| EnteredBinaryOperator Minus
+        , actionButton s.button "×" <| EnteredBinaryOperator Multiply
+        , actionButton s.button "÷" <| EnteredBinaryOperator Divide
+        , actionButton s.button "=" Equals
+        ]
+
+
 view model =
     let
         s =
@@ -243,31 +312,8 @@ view model =
     in
         div [ class s.container ]
             [ div [ class s.display ] [ section [] [ section [] [ text <| String.fromList model.currentInput ] ] ]
-            , div [ class s.buttons ]
-                [ div [ class s.numbers ]
-                    [ div [ class s.numbersContainer ]
-                        [ div [ class s.buttonRow ]
-                            [ digitButton s.button '7'
-                            , digitButton s.button '8'
-                            , digitButton s.button '9'
-                            ]
-                        , div [ class s.buttonRow ]
-                            [ digitButton s.button '4'
-                            , digitButton s.button '5'
-                            , digitButton s.button '6'
-                            ]
-                        , div [ class s.buttonRow ]
-                            [ digitButton s.button '1'
-                            , digitButton s.button '2'
-                            , digitButton s.button '3'
-                            ]
-                        , div [ class s.buttonRow ]
-                            [ digitButton s.bigButton '0'
-                            , actionButton s.button "." EnteredDecimal
-                            ]
-                        ]
-                    ]
-                ]
+            , div [ class s.buttons ] [ digitButtons s ]
+            , div [] [ actionButtons s ]
             ]
 
 
