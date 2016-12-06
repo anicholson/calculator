@@ -1,27 +1,5 @@
-@font-face {
-    font-family: "DSEG7";
-    src: url("./dseg.woff");
-}
-
-:local(.darkBackground) {
-    background: #011320;
-}
-
-:local(.medBackground) {
-    background: #09283F;
-}
-
-:local(.lightBackground) {
-    background: #5E829B;
-}
-
-:local(.lightText) {
-    color: #5E829B;
-}
-
 :local(.container) {
     position: relative;
-    background: blue;
     max-width: 600px;
     max-height: 780px;
     width: 100vw;
@@ -30,7 +8,7 @@
 }
 
 :local(.display) {
-    composes: lightBackground;
+    composes: lightBackground from "./base.css";
     position: relative;
     width: 100%;
     height: 15%;
@@ -54,17 +32,28 @@
 }
 
 :local(.buttons) {
-    composes: darkBackground;
+    composes: darkBackground from "./base.css";
     position: relative;
     width: 100%;
     height:85%;
 
 }
 
+:local(.actions) {
+    position: relative;
+    height: 100%;
+    width: 25%;
+    float: right;
+
+    display: flex;
+    flex-direction: column;
+}
+
 :local(.numbers) {
     position: relative;
     height: 100%;
     width: 75%;
+    float: left;
 }
 
 :local(.numbersContainer) {
@@ -79,7 +68,7 @@
 }            
 
 :local(.buttonRow) {
-    composes: medBackground;
+    composes: medBackground from "./base.css";
     position: relative;
     width: 100%;
     height: 25%;
@@ -89,20 +78,26 @@
     justify-items: center;
 }
 
-:local(.button) {
-    composes: lightText;
-    display: flex;
-    flex: 1;
-    align-content: center;
-    align-items: center;
-    justify-content: center;
-    flex: 1 32%;
-    
+:local(.digitButton) {
+    composes: lightText from "./base.css";
+    composes: button from "./base.css";
+    composes: threeUp from "./base.css";
     font-size: 12vmin;
-    
 }
 
-:local(.bigButton) {
-    composes: button;
-    flex: 1 65%;
+:local(.actionButton) {
+    composes: lightText from "./base.css";
+    composes: button from "./base.css";
+
+    font-size: 9vmin;
+}
+
+:local(.clearButton) {
+    composes: button from "./base.css";
+    composes: contrast from "./base.css";
+}
+
+:local(.bigDigitButton) {
+    composes: digitButton;
+    composes: threeUpDouble from "./base.css";
 }

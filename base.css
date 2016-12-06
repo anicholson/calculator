@@ -1,0 +1,45 @@
+@import url('https://fonts.googleapis.com/css?family=Muli');
+
+@font-face {
+    font-family: "DSEG7";
+    src: url("./dseg.woff");
+}
+
+.darkBackground {
+    background: #011320;
+}
+
+.medBackground {
+    background: #09283F;
+}
+
+.lightBackground {
+    background: #5E829B;
+}
+
+.lightText {
+    color: #5E829B;
+}
+
+.contrast {
+    color: #AA5739;
+}
+
+
+.threeUp {
+    flex-basis: 33%;
+}
+
+.threeUpDouble {
+    flex-basis: 66%;
+}
+
+.button {
+    display: flex;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+    flex: 1 ;
+
+    font-family: 'Muli';
+}

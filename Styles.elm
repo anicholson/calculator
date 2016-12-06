@@ -7,12 +7,14 @@ import Json.Decode.Pipeline exposing (decode, required)
 type alias ClassNames =
     { container : String
     , display : String
-    , button : String
+    , digitButton : String
     , buttons : String
-    , bigButton : String
+    , bigDigitButton : String
     , numbers : String
     , numbersContainer : String
     , buttonRow : String
+    , actions : String
+    , actionButton : String
     }
 
 
@@ -27,3 +29,5 @@ decoder =
         |> required "numbers" string
         |> required "numbersContainer" string
         |> required "buttonRow" string
+        |> required "actions" string
+        |> required "actionButton" string

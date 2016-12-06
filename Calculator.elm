@@ -272,23 +272,23 @@ digitButtons s =
     div [ class s.numbers ]
         [ div [ class s.numbersContainer ]
             [ div [ class s.buttonRow ]
-                [ digitButton s.button '7'
-                , digitButton s.button '8'
-                , digitButton s.button '9'
+                [ digitButton s.digitButton '7'
+                , digitButton s.digitButton '8'
+                , digitButton s.digitButton '9'
                 ]
             , div [ class s.buttonRow ]
-                [ digitButton s.button '4'
-                , digitButton s.button '5'
-                , digitButton s.button '6'
+                [ digitButton s.digitButton '4'
+                , digitButton s.digitButton '5'
+                , digitButton s.digitButton '6'
                 ]
             , div [ class s.buttonRow ]
-                [ digitButton s.button '1'
-                , digitButton s.button '2'
-                , digitButton s.button '3'
+                [ digitButton s.digitButton '1'
+                , digitButton s.digitButton '2'
+                , digitButton s.digitButton '3'
                 ]
             , div [ class s.buttonRow ]
-                [ digitButton s.bigButton '0'
-                , actionButton s.button "." EnteredDecimal
+                [ digitButton s.bigDigitButton '0'
+                , actionButton s.actionButton "." EnteredDecimal
                 ]
             ]
         ]
@@ -296,12 +296,12 @@ digitButtons s =
 
 actionButtons : ClassNames -> Html.Html Msg
 actionButtons s =
-    div []
-        [ actionButton s.button "+" <| EnteredBinaryOperator Plus
-        , actionButton s.button "−" <| EnteredBinaryOperator Minus
-        , actionButton s.button "×" <| EnteredBinaryOperator Multiply
-        , actionButton s.button "÷" <| EnteredBinaryOperator Divide
-        , actionButton s.button "=" Equals
+    div [ class s.actions ]
+        [ actionButton s.actionButton "+" <| EnteredBinaryOperator Plus
+        , actionButton s.actionButton "−" <| EnteredBinaryOperator Minus
+        , actionButton s.actionButton "×" <| EnteredBinaryOperator Multiply
+        , actionButton s.actionButton "÷" <| EnteredBinaryOperator Divide
+        , actionButton s.actionButton "=" Equals
         ]
 
 
@@ -312,8 +312,7 @@ view model =
     in
         div [ class s.container ]
             [ div [ class s.display ] [ section [] [ section [] [ text <| String.fromList model.currentInput ] ] ]
-            , div [ class s.buttons ] [ digitButtons s ]
-            , div [] [ actionButtons s ]
+            , div [ class s.buttons ] [ digitButtons s, actionButtons s ]
             ]
 
 
