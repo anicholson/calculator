@@ -1,3 +1,8 @@
+@font-face {
+    font-family: "DSEG7";
+    src: url("./dseg.woff");
+}
+
 :local(.darkBackground) {
     background: #011320;
 }
@@ -30,7 +35,7 @@
     width: 100%;
     height: 15%;
     color: #3A352F;
-    font-family: "DSEG7 Classic";
+    font-family: "DSEG7";
     font-weight: 700;
     font-size:  10vmin;
     text-align: right;

@@ -12,7 +12,7 @@ module.exports = {
     module: {
         loaders: [
             { test: /\.css$/, loader: "style-loader!css-loader?modules" },
-                             
+            { test: /\.woff$/, loader: "file-loader" },
             { test: /\.elm$/,  loader: "elm-webpack-loader" },
             { test: /\.html$/, loader: htmlExtractor.extract(
                 { loader: "html-loader?minimize=true" }
